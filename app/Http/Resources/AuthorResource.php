@@ -25,4 +25,10 @@ class AuthorResource extends JsonResource
   {
     return $this->resource;
   }
+
+  public function destroy()
+  {
+    return $this->resource;
+  }
+
 }

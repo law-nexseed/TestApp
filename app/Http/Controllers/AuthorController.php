@@ -8,6 +8,7 @@ use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthorController extends Controller
 {
@@ -25,22 +26,16 @@ class AuthorController extends Controller
     {
         try {
             $authors = $this->authorContract->index();
+            $response = [
+                'code' => Response::HTTP_OK,
+                'message' => 'All authors fetched successfully',
+            ];
 
-            $author = $authors->where('name', 'Amiel');
-
-            return new AuthorResource($author, __FUNCTION__);
+            return (new AuthorResource($authors, __FUNCTION__))->additional($response);
         } catch(Exception $e) {
             dd($e);
         }
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -56,8 +51,12 @@ class AuthorController extends Controller
             ]);
 
             $author = $this->authorContract->store($params);
+            $response = [
+                'code' => Response::HTTP_OK,
+                'message' => 'Author created successfully',
+            ];
 
-            return new AuthorResource($author,__FUNCTION__);
+            return (new AuthorResource($author,__FUNCTION__))->additional($response);
         } catch (Exception $e) {
              dd($e);
         }
@@ -70,14 +69,6 @@ class AuthorController extends Controller
     public function show(Author $author)
     {
         return new AuthorResource($author, __FUNCTION__);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Author $author)
-    {
-
     }
 
     /**
@@ -96,7 +87,12 @@ class AuthorController extends Controller
 
             $author->refresh();
 
-            return new AuthorResource($author,__FUNCTION__);
+            $response = [
+                'code' => Response::HTTP_OK,
+                'message' => 'Author updated successfully',
+            ];
+
+            return (new AuthorResource($author,__FUNCTION__))->additional($response);
         } catch (Exception $e) {
              dd($e);
         }
@@ -107,6 +103,17 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        try{
+            $author->delete();
+
+            $response = [
+                'code' => Response::HTTP_OK,
+                'message' => 'Author successfully deleted',
+            ];
+
+            return (new AuthorResource([], __FUNCTION__))->additional($response);
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 }

@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('author', AuthorController::class)->only(['index', 'store','show','update']);
-Route::apiResource('book', BooksController::class)->only(['index', 'update','store','show']);
+Route::apiResource('author', AuthorController::class)->only(['index', 'store','show','update', 'destroy']);
+Route::apiResource('book', BooksController::class)->only(['index', 'update','store','show', 'destroy']);
